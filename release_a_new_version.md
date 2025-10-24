@@ -1,6 +1,6 @@
 # Release Check List
 
-1. Delete 2 folders: [calapy.egg-info](calapy.egg-info), [dist](dist).
+1. Delete 2 folders: [calapy-ml.egg-info](calapy-ml.egg-info), [dist](dist).
 
 2. Choose the name of the new version with the format A.B.C.D where A, B, C and D are positive integers. Increase D by 1
    if the new version only has bag fixes and marginal changes. Increase C by 1 and set D to 0 if the new version has
