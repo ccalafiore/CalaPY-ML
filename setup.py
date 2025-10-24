@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="calapy-ml",
-    version="0.0.0",
+    version="0.0.0.0",
     author="Carmelo Calafiore",
     author_email="dr.carmelo.calafiore@gmail.com",
     description="Machine Learning Toolkit",
@@ -15,11 +15,9 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
-        "Operating System :: OS Independent"
-    ],
-    # test whether numpy and PIL are dependencies of torch and torchvision
+        "Operating System :: OS Independent"],
     install_requires=[
-        'calapy', 'numpy', 'torch', 'torchvision', 'Pillow'
+        'basickit', 'torch', 'torchvision', 'Pillow'
     ],
     python_requires='>=3.6')
 
