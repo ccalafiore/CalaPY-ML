@@ -43,17 +43,17 @@
       ```
    4. Close Command Prompt
 
-7. Uninstall calapy from an environment myenv:
+7. Uninstall calapy-ml from an environment myenv:
    ```
    conda activate myenv
-   python -m pip uninstall calapy
+   python -m pip uninstall calapy-ml
    ```
    If they still exist, manually delete the 2 directories:
-   - directory\of\anaconda\envs\myenv\Lib\site-packages\calapy
-   - directory\of\anaconda\envs\myenv\Lib\site-packages\calapy-\*.\*.\*.\*.dist-info
+   - directory\of\anaconda\envs\myenv\Lib\site-packages\calapy-ml
+   - directory\of\anaconda\envs\myenv\Lib\site-packages\calapy-ml-\*.\*.\*.\*.dist-info
 
-8. Re-install calapy with:
+8. Re-install calapy-ml with:
    ```
-   python -m pip install --upgrade calapy
+   python -m pip install --upgrade calapy-ml
    ```
 
