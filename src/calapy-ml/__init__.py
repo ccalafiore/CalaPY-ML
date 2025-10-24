@@ -1,7 +1,7 @@
 import datetime
 import importlib
 
-__version__ = '1.0.0'
+__version__ = '0.0.0.0'
 
 __release_day__ = 23
 __release_month_num__ = 10
