@@ -1,6 +1,6 @@
 # Release Check List
 
-1. Delete 2 folders: [calapy-ml.egg-info](calapy-ml.egg-info), [dist](dist).
+1. Delete 2 folders: [dist](dist), [src/smartlearning.egg-info](src/smartlearning.egg-info).
 
 2. Choose the name of the new version with the format A.B.C.D where A, B, C and D are positive integers. Increase D by 1
    if the new version only has bag fixes and marginal changes. Increase C by 1 and set D to 0 if the new version has
@@ -9,14 +9,14 @@
    Increase A by 1 and set B, C and D to 0, if the main structure of the package has changed and most of the code that
    was writen with the previous code does not work any longer.
 
-3. Update the version and release date in [calapy-ml/__init__.py](src/calapy-ml/__init__.py).
+3. Update the version and release date in [src/smartlearning/__init__.py](src/smartlearning/__init__.py).
 
 4. Update the version in [pyproject.toml](pyproject.toml).
 
 5. Activate conda environment with:
    
-   1. Install anaconda
-   2. Create a conda environment with:
+   1. Install anaconda if you haven't;
+   2. Create a conda environment with the below if you haven't:
       ```
       conda create --name myenv
       ```
@@ -33,7 +33,7 @@
       ```
    2. Change working directory to the repo's with:
       ```
-      cd "directory\of\CalaPy-ML"
+      cd "directory\of\Python-Package-SmartLearning"
       ```
 
    3. Run these:
@@ -43,17 +43,17 @@
       ```
    4. Close Command Prompt
 
-7. Uninstall calapy-ml from an environment myenv:
+7. Uninstall SmartLearning from an environment myenv:
    ```
    conda activate myenv
-   python -m pip uninstall calapy-ml
+   python -m pip uninstall smartlearning
    ```
    If they still exist, manually delete the 2 directories:
-   - directory\of\anaconda\envs\myenv\Lib\site-packages\calapy-ml
-   - directory\of\anaconda\envs\myenv\Lib\site-packages\calapy-ml-\*.\*.\*.\*.dist-info
+   - directory\of\anaconda\envs\myenv\Lib\site-packages\smartlearning
+   - directory\of\anaconda\envs\myenv\Lib\site-packages\smartlearning-\*.\*.\*.\*.dist-info
 
-8. Re-install calapy-ml with:
+8. Re-install SmartLearning with:
    ```
-   python -m pip install --upgrade calapy-ml
+   python -m pip install --upgrade smartlearning
    ```
 

@@ -1,5 +1,5 @@
 
 .idea
 
-calapy-ml.egg-info
+src/smartlearning.egg-info
 dist

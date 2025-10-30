@@ -1,14 +1,10 @@
-# CalaPy
+# SmartLearning
 
-CalaPy is an undocumented python library that Dr Carmelo Calafiore developed for personal use. It is a collection of
-many python functions that Dr Carmelo tends to use in different projects.
+SmartLearning is a Python package for Machine Learning (ML).
 
-In previous versions from 0.0.0 to 0.0.60, the name of this package was ccalafiore.
-
-You can install CalaPy by pip as:
-
+You can install SmartLearning with pip:
 ```
-pip install calapy
+python -m pip install smartlearning
 ```
 
 ## Contacts

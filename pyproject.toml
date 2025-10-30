@@ -3,31 +3,37 @@ requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "calapy-ml"
+name = "smartlearning"
 version = "0.0.0.0"
 dependencies = [
-    "basickit",
+    "independent",
     "torch",
     "torchvision",
     "Pillow",
 ]
-requires-python = ">= 3.6"
+requires-python = ">= 3.7"
 authors = [
     {name = "Carmelo Calafiore", email = "dr.carmelo.calafiore@gmail.com"},
 ]
 maintainers = [
     {name = "Carmelo Calafiore", email = "dr.carmelo.calafiore@gmail.com"},
 ]
-description = "Personal Package"
+description = "A Python Package for Machine Learning"
 readme = {file = "README.md", content-type = "text/markdown"}
 license = "MIT"
 license-files = ["LICENSE.txt"]
-keywords = ["basic", "tools", "toolkit", "toolbox", "kit", "utilities"]
+keywords = [
+    "machine learning", "ml",
+    "supervised learning",
+#    "unsupervised learning",
+    "reinforcement learning",
+    "deep learning",
+]
 classifiers = [
     "Programming Language :: Python :: 3",
     "Operating System :: OS Independent",
 ]
 
 [project.urls]
-Repository = "https://github.com/ccalafiore/CalaPy-ML"
-Issues = "https://github.com/ccalafiore/CalaPy-ML/issues"
+Repository = "https://github.com/ccalafiore/Python-Package-SmartLearning"
+Issues = "https://github.com/ccalafiore/Python-Package-SmartLearning/issues"
