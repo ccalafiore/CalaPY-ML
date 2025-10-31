@@ -1,5 +1,5 @@
 
-.idea
+/.idea
 
-src/smartdatafit.egg-info
-dist
+/build
+/src/smartdatafit.egg-info
