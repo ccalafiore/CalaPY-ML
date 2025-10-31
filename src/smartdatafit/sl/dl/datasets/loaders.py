@@ -14,7 +14,6 @@ import math
 import os
 import copy
 import typing
-import types
 import independent as idp
 from ..devices import define_device as sdf_define_device
 from ..datasets import tools as dset_tools
