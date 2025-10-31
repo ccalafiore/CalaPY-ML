@@ -1,10 +1,10 @@
-# SmartLearning
+# SmartDataFit
 
-SmartLearning is a Python package for Machine Learning (ML).
+SmartDataFit is a Python package for Machine Learning (ML).
 
-You can install SmartLearning with pip:
+You can install SmartDataFit with pip:
 ```
-python -m pip install smartlearning
+python -m pip install smartdatafit
 ```
 
 ## Contacts

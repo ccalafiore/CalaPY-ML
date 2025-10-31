@@ -3,7 +3,7 @@ requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "smartlearning"
+name = "smartdatafit"
 version = "0.0.0.0"
 dependencies = [
     "independent",
@@ -35,5 +35,5 @@ classifiers = [
 ]
 
 [project.urls]
-Repository = "https://github.com/ccalafiore/Python-Package-SmartLearning"
-Issues = "https://github.com/ccalafiore/Python-Package-SmartLearning/issues"
+Repository = "https://github.com/ccalafiore/Python-Package-SmartDataFit"
+Issues = "https://github.com/ccalafiore/Python-Package-SmartDataFit/issues"
