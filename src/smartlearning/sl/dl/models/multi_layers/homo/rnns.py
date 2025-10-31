@@ -3,9 +3,9 @@
 import numpy as np
 import torch
 from ...model_tools import ModelMethods
-from ... import single_layers as cp_single_layers
+from ... import single_layers as dlm_single_layers
 from ._base import *
-from .fcns import IndFCNNs as cp_multi_homo_layers_IndFCNNs
+from .fcns import IndFCNNs as sdf_multi_homo_layers_IndFCNNs
 
 
 __all__ = ['RNN', 'IndRNNs', 'RNNsWithSharedLayersAndPrivateLayers', 'SharedRNNAndIndRNNsAndIndFCNNs']
@@ -77,21 +77,21 @@ class RNN(_NN):
 
         if self.type_name == 'rnn':
 
-            self.layers = torch.nn.ModuleList([cp_single_layers.RNN(
+            self.layers = torch.nn.ModuleList([dlm_single_layers.RNN(
                 input_size=self.n_input_features_layers[l], hidden_size=self.n_output_features_layers[l],
                 bias=self.biases_layers[l], nonlinearity=nonlinearity, axis_time=axis_time, h_sigma=h_sigma,
                 device=device, dtype=dtype) for l in range(0, self.L, 1)])
 
         elif self.type_name == 'lstm':
 
-            self.layers = torch.nn.ModuleList([cp_single_layers.LSTM(
+            self.layers = torch.nn.ModuleList([dlm_single_layers.LSTM(
                 input_size=self.n_input_features_layers[l], hidden_size=self.n_output_features_layers[l],
                 bias=self.biases_layers[l], axis_time=axis_time, h_sigma=h_sigma, device=device, dtype=dtype)
                 for l in range(0, self.L, 1)])
 
         elif self.type_name == 'gru':
 
-            self.layers = torch.nn.ModuleList([cp_single_layers.GRU(
+            self.layers = torch.nn.ModuleList([dlm_single_layers.GRU(
                 input_size=self.n_input_features_layers[l], hidden_size=self.n_output_features_layers[l],
                 bias=self.biases_layers[l], axis_time=axis_time, h_sigma=h_sigma, device=device, dtype=dtype)
                 for l in range(0, self.L, 1)])
@@ -737,7 +737,7 @@ class SharedRNNAndIndRNNsAndIndFCNNs(RNNsWithSharedLayersAndPrivateLayers):
             if RNNsWithSharedLayersAndPrivateLayers not in self.superclasses_initiated:
                 self.superclasses_initiated.append(RNNsWithSharedLayersAndPrivateLayers)
 
-        self.private_fc_layers = cp_multi_homo_layers_IndFCNNs(
+        self.private_fc_layers = sdf_multi_homo_layers_IndFCNNs(
             n_features_layers=n_features_private_fc_layers, biases_layers=biases_private_fc_layers,
             axis_features=axis_features, device=device, dtype=dtype)
 

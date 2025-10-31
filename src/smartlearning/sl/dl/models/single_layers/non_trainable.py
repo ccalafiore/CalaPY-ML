@@ -2,13 +2,13 @@
 
 import numpy as np
 import torch
-from ..model_tools import ModelMethods as CPModelMethods
-from ... import tensors as cp_tensors
+from ..model_tools import ModelMethods as sdf_ModelMethods
+from ... import tensors as sdf_tensors
 
 __all__ = ['Noise', 'Addition', 'Concatenation']
 
 
-class Noise(CPModelMethods):
+class Noise(sdf_ModelMethods):
 
     def __init__(self, scale=0.1):
         """
@@ -26,10 +26,10 @@ class Noise(CPModelMethods):
         except NameError:
             self.superclasses_initiated = []
 
-        if CPModelMethods not in self.superclasses_initiated:
-            CPModelMethods.__init__(self=self)
-            if CPModelMethods not in self.superclasses_initiated:
-                self.superclasses_initiated.append(CPModelMethods)
+        if sdf_ModelMethods not in self.superclasses_initiated:
+            sdf_ModelMethods.__init__(self=self)
+            if sdf_ModelMethods not in self.superclasses_initiated:
+                self.superclasses_initiated.append(sdf_ModelMethods)
 
         self.mu = 0.0
         # self.sigma = None
@@ -51,12 +51,12 @@ class Noise(CPModelMethods):
         # :type x: torch.Tensor # | list[torch.Tensor] | tuple[torch.Tensor]
 
         if self.training:
-            return cp_tensors.add_noise(x=x, scale=self.scale, mu=self.mu, generator=generator)
+            return sdf_tensors.add_noise(x=x, scale=self.scale, mu=self.mu, generator=generator)
         else:
             return x
 
 
-class Addition(CPModelMethods):
+class Addition(sdf_ModelMethods):
 
     def __init__(self, axes, keepdim=False):
         """
@@ -74,10 +74,10 @@ class Addition(CPModelMethods):
         except NameError:
             self.superclasses_initiated = []
 
-        if CPModelMethods not in self.superclasses_initiated:
-            CPModelMethods.__init__(self=self)
-            if CPModelMethods not in self.superclasses_initiated:
-                self.superclasses_initiated.append(CPModelMethods)
+        if sdf_ModelMethods not in self.superclasses_initiated:
+            sdf_ModelMethods.__init__(self=self)
+            if sdf_ModelMethods not in self.superclasses_initiated:
+                self.superclasses_initiated.append(sdf_ModelMethods)
 
         if isinstance(axes, int):
             self.axes = tuple([axes])
@@ -110,7 +110,7 @@ class Addition(CPModelMethods):
         return torch.sum(input=x, dim=self.axes, keepdim=self.keepdim)
 
 
-class Concatenation(CPModelMethods):
+class Concatenation(sdf_ModelMethods):
 
     def __init__(self, axis):
         """
@@ -127,10 +127,10 @@ class Concatenation(CPModelMethods):
         except NameError:
             self.superclasses_initiated = []
 
-        if CPModelMethods not in self.superclasses_initiated:
-            CPModelMethods.__init__(self=self)
-            if CPModelMethods not in self.superclasses_initiated:
-                self.superclasses_initiated.append(CPModelMethods)
+        if sdf_ModelMethods not in self.superclasses_initiated:
+            sdf_ModelMethods.__init__(self=self)
+            if sdf_ModelMethods not in self.superclasses_initiated:
+                self.superclasses_initiated.append(sdf_ModelMethods)
 
         if isinstance(axis, int):
             self.axis = axis

@@ -9,9 +9,9 @@ import torch
 import torchvision
 
 if __name__ == "__main__":
-    from calapy.ml.sl.dl import devices
+    from independent.ml.sl.dl import devices as sdf_devices
 else:
-    from ...dl import devices
+    from ...dl import devices as sdf_devices
 
 
 class ResNetNoLastLayer(torchvision.models.resnet.ResNet):
@@ -49,7 +49,7 @@ class ResNetNoLastLayer(torchvision.models.resnet.ResNet):
 
         delattr(self, 'fc')
 
-        self.device = devices.define_device(device)
+        self.device = sdf_devices.define_device(device)
         self.to(self.device)
 
     def forward(self, x):
@@ -119,7 +119,7 @@ def load_resnet(name_resnet, last_layer=True, K=None, softmax=False, pretrained=
             state_dict.pop('fc.bias')
             resnet.load_state_dict(state_dict)
 
-    device_resnet = devices.define_device(device)
+    device_resnet = sdf_devices.define_device(device)
     resnet.to(device_resnet)
 
     return resnet
@@ -145,7 +145,7 @@ def load_model(name_model, pretrained=False, device=None):
     if isinstance(pretrained, str):
         model.load_state_dict(torch.load(pretrained))
 
-    device_model = devices.define_device(device)
+    device_model = sdf_devices.define_device(device)
     model.to(device_model)
 
     return model

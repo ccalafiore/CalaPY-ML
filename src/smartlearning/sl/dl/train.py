@@ -12,12 +12,12 @@ import typing
 import math
 import os
 import copy
-import calapy as cp
+import independent as idp
 
 
 def passive_feature_sequence_classifiers(
         model, loader, optimizer, scheduler, I=10, E=None, directory_outputs=None):
-    timer = cp.clock.Timer()
+    timer = idp.clock.Timer()
 
     if model.training:
         model.eval()
@@ -242,11 +242,11 @@ def passive_feature_sequence_classifiers(
         stats['lines'][e][stats['headers']['Training_Accuracy_In_Each_Time_Point']] = separators_times.join(
             [str(t) for t in accuracy_T_e.tolist()])
 
-        unweighted_class_prediction_loss_str_e = cp.strings.format_float_to_str(
+        unweighted_class_prediction_loss_str_e = idp.strings.format_float_to_str(
             unweighted_class_prediction_loss_e, n_decimals=n_decimals_for_printing)
-        weighted_class_prediction_loss_str_e = cp.strings.format_float_to_str(
+        weighted_class_prediction_loss_str_e = idp.strings.format_float_to_str(
             weighted_class_prediction_loss_e, n_decimals=n_decimals_for_printing)
-        accuracy_str_e = cp.strings.format_float_to_str(accuracy_e, n_decimals=n_decimals_for_printing)
+        accuracy_str_e = idp.strings.format_float_to_str(accuracy_e, n_decimals=n_decimals_for_printing)
 
         print(
             'Epoch: {e:d}. Training. Unweighted Classification Loss: {class_prediction_loss:s}. Accuracy: {accuracy:s}.'.format(
@@ -359,7 +359,7 @@ def passive_feature_sequence_classifiers(
         if unweighted_class_prediction_loss_e < lowest_unweighted_class_prediction_loss:
 
             lowest_unweighted_class_prediction_loss = unweighted_class_prediction_loss_e
-            lowest_unweighted_class_prediction_loss_str = cp.strings.format_float_to_str(
+            lowest_unweighted_class_prediction_loss_str = idp.strings.format_float_to_str(
                 lowest_unweighted_class_prediction_loss, n_decimals=n_decimals_for_printing)
 
             stats['lines'][e][stats['headers']['Is_Lower_Validation_Unweighted_Class_Prediction_Loss']] = 1
@@ -377,7 +377,7 @@ def passive_feature_sequence_classifiers(
         if weighted_class_prediction_loss_e < lowest_weighted_class_prediction_loss:
 
             lowest_weighted_class_prediction_loss = weighted_class_prediction_loss_e
-            lowest_weighted_class_prediction_loss_str = cp.strings.format_float_to_str(
+            lowest_weighted_class_prediction_loss_str = idp.strings.format_float_to_str(
                 lowest_weighted_class_prediction_loss, n_decimals=n_decimals_for_printing)
 
             stats['lines'][e][stats['headers']['Is_Lower_Validation_Weighted_Class_Prediction_Loss']] = 1
@@ -394,7 +394,7 @@ def passive_feature_sequence_classifiers(
 
         if accuracy_e > highest_accuracy:
             highest_accuracy = accuracy_e
-            highest_accuracy_str = cp.strings.format_float_to_str(
+            highest_accuracy_str = idp.strings.format_float_to_str(
                 highest_accuracy, n_decimals=n_decimals_for_printing)
 
             stats['lines'][e][stats['headers']['Is_Higher_Accuracy']] = 1
@@ -417,13 +417,13 @@ def passive_feature_sequence_classifiers(
         if os.path.isfile(directory_stats):
             os.remove(directory_stats)
 
-        cp.txt.lines_to_csv_file(stats['lines'], directory_stats, stats['headers'])
+        idp.txt.lines_to_csv_file(stats['lines'], directory_stats, stats['headers'])
 
-        unweighted_class_prediction_loss_str_e = cp.strings.format_float_to_str(
+        unweighted_class_prediction_loss_str_e = idp.strings.format_float_to_str(
             unweighted_class_prediction_loss_e, n_decimals=n_decimals_for_printing)
-        weighted_class_prediction_loss_str_e = cp.strings.format_float_to_str(
+        weighted_class_prediction_loss_str_e = idp.strings.format_float_to_str(
             weighted_class_prediction_loss_e, n_decimals=n_decimals_for_printing)
-        accuracy_str_e = cp.strings.format_float_to_str(accuracy_e, n_decimals=n_decimals_for_printing)
+        accuracy_str_e = idp.strings.format_float_to_str(accuracy_e, n_decimals=n_decimals_for_printing)
 
         print(
             'Epoch: {e:d}. Validation. Unweighted Classification Loss: {class_prediction_loss:s}. Accuracy: {accuracy:s}.'.format(
@@ -456,7 +456,7 @@ def proactive_feature_sequence_classifiers(
         model, loader, delta_preprocessor, optimizer, scheduler, I=10, E=None, T=None,
         epsilon_start=.9, epsilon_end=.2, epsilon_step=-.1, directory_outputs=None):
 
-    timer = cp.clock.Timer()
+    timer = idp.clock.Timer()
 
     if model.training:
         model.eval()
@@ -820,21 +820,21 @@ def proactive_feature_sequence_classifiers(
         stats['lines'][e][stats['headers']['Training_Accuracy_In_Each_Time_Point']] = separators_times.join(
             [str(t) for t in accuracy_T_e.tolist()])
 
-        unweighted_loss_str_e = cp.strings.format_float_to_str(
+        unweighted_loss_str_e = idp.strings.format_float_to_str(
             unweighted_loss_e, n_decimals=n_decimals_for_printing)
-        weighted_loss_str_e = cp.strings.format_float_to_str(weighted_loss_e, n_decimals=n_decimals_for_printing)
+        weighted_loss_str_e = idp.strings.format_float_to_str(weighted_loss_e, n_decimals=n_decimals_for_printing)
 
-        unweighted_value_action_loss_str_e = cp.strings.format_float_to_str(
+        unweighted_value_action_loss_str_e = idp.strings.format_float_to_str(
             unweighted_value_action_loss_e, n_decimals=n_decimals_for_printing)
 
-        weighted_value_action_loss_str_e = cp.strings.format_float_to_str(
+        weighted_value_action_loss_str_e = idp.strings.format_float_to_str(
             weighted_value_action_loss_e, n_decimals=n_decimals_for_printing)
 
-        unweighted_class_prediction_loss_str_e = cp.strings.format_float_to_str(
+        unweighted_class_prediction_loss_str_e = idp.strings.format_float_to_str(
             unweighted_class_prediction_loss_e, n_decimals=n_decimals_for_printing)
-        weighted_class_prediction_loss_str_e = cp.strings.format_float_to_str(
+        weighted_class_prediction_loss_str_e = idp.strings.format_float_to_str(
             weighted_class_prediction_loss_e, n_decimals=n_decimals_for_printing)
-        accuracy_str_e = cp.strings.format_float_to_str(accuracy_e, n_decimals=n_decimals_for_printing)
+        accuracy_str_e = idp.strings.format_float_to_str(accuracy_e, n_decimals=n_decimals_for_printing)
 
         print(
             'Epoch: {e:d}. Training. Unweighted Value Action Loss: {action_loss:s}. Unweighted Classification Loss: {class_prediction_loss:s}. Accuracy: {accuracy:s}.'.format(
@@ -1072,7 +1072,7 @@ def proactive_feature_sequence_classifiers(
         if unweighted_class_prediction_loss_e < lowest_unweighted_class_prediction_loss:
 
             lowest_unweighted_class_prediction_loss = unweighted_class_prediction_loss_e
-            lowest_unweighted_class_prediction_loss_str = cp.strings.format_float_to_str(
+            lowest_unweighted_class_prediction_loss_str = idp.strings.format_float_to_str(
                 lowest_unweighted_class_prediction_loss, n_decimals=n_decimals_for_printing)
 
             stats['lines'][e][stats['headers']['Is_Lower_Validation_Unweighted_Class_Prediction_Loss']] = 1
@@ -1090,7 +1090,7 @@ def proactive_feature_sequence_classifiers(
         if weighted_class_prediction_loss_e < lowest_weighted_class_prediction_loss:
 
             lowest_weighted_class_prediction_loss = weighted_class_prediction_loss_e
-            lowest_weighted_class_prediction_loss_str = cp.strings.format_float_to_str(
+            lowest_weighted_class_prediction_loss_str = idp.strings.format_float_to_str(
                 lowest_weighted_class_prediction_loss, n_decimals=n_decimals_for_printing)
 
             stats['lines'][e][stats['headers']['Is_Lower_Validation_Weighted_Class_Prediction_Loss']] = 1
@@ -1107,7 +1107,7 @@ def proactive_feature_sequence_classifiers(
 
         if accuracy_e > highest_accuracy:
             highest_accuracy = accuracy_e
-            highest_accuracy_str = cp.strings.format_float_to_str(
+            highest_accuracy_str = idp.strings.format_float_to_str(
                 highest_accuracy, n_decimals=n_decimals_for_printing)
 
             stats['lines'][e][stats['headers']['Is_Higher_Accuracy']] = 1
@@ -1130,23 +1130,23 @@ def proactive_feature_sequence_classifiers(
         if os.path.isfile(directory_stats):
             os.remove(directory_stats)
 
-        cp.txt.lines_to_csv_file(stats['lines'], directory_stats, stats['headers'])
+        idp.txt.lines_to_csv_file(stats['lines'], directory_stats, stats['headers'])
 
-        unweighted_loss_str_e = cp.strings.format_float_to_str(
+        unweighted_loss_str_e = idp.strings.format_float_to_str(
             unweighted_loss_e, n_decimals=n_decimals_for_printing)
-        weighted_loss_str_e = cp.strings.format_float_to_str(weighted_loss_e, n_decimals=n_decimals_for_printing)
+        weighted_loss_str_e = idp.strings.format_float_to_str(weighted_loss_e, n_decimals=n_decimals_for_printing)
 
-        unweighted_value_action_loss_str_e = cp.strings.format_float_to_str(
+        unweighted_value_action_loss_str_e = idp.strings.format_float_to_str(
             unweighted_value_action_loss_e, n_decimals=n_decimals_for_printing)
 
-        weighted_value_action_loss_str_e = cp.strings.format_float_to_str(
+        weighted_value_action_loss_str_e = idp.strings.format_float_to_str(
             weighted_value_action_loss_e, n_decimals=n_decimals_for_printing)
 
-        unweighted_class_prediction_loss_str_e = cp.strings.format_float_to_str(
+        unweighted_class_prediction_loss_str_e = idp.strings.format_float_to_str(
             unweighted_class_prediction_loss_e, n_decimals=n_decimals_for_printing)
-        weighted_class_prediction_loss_str_e = cp.strings.format_float_to_str(
+        weighted_class_prediction_loss_str_e = idp.strings.format_float_to_str(
             weighted_class_prediction_loss_e, n_decimals=n_decimals_for_printing)
-        accuracy_str_e = cp.strings.format_float_to_str(accuracy_e, n_decimals=n_decimals_for_printing)
+        accuracy_str_e = idp.strings.format_float_to_str(accuracy_e, n_decimals=n_decimals_for_printing)
 
         print(
             'Epoch: {e:d}. Validation. Unweighted Value Action Loss: {action_loss:s}. Unweighted Classification Loss: {class_prediction_loss:s}. Accuracy: {accuracy:s}.'.format(

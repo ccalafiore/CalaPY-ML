@@ -9,7 +9,7 @@ import torch
 import numpy as np
 import math
 import os
-import calapy as cp
+import independent as idp
 from .tools import Shifts
 
 
@@ -116,12 +116,12 @@ class CSVLoader:
         self.levels_intra_sort = np.sort(self.levels_intra, axis=0)
 
         self.levels_all = np.arange(self.L, dtype='i')
-        if any(cp.array.samples_in_arr1_are_not_in_arr2(self.levels_intra, self.levels_all)):
+        if any(idp.array.samples_in_arr1_are_not_in_arr2(self.levels_intra, self.levels_all)):
             raise ValueError('levels_intra')
 
         if levels_inter is None:
             self.levels_inter = (
-                self.levels_all[cp.array.samples_in_arr1_are_not_in_arr2(self.levels_all, self.levels_intra)])
+                self.levels_all[idp.array.samples_in_arr1_are_not_in_arr2(self.levels_all, self.levels_intra)])
             self.levels_inter_sort = self.levels_inter
         else:
             try:
@@ -136,14 +136,14 @@ class CSVLoader:
             self.levels_inter[self.levels_inter < 0] += self.L
             self.levels_inter_sort = np.sort(self.levels_inter, axis=0)
 
-            if any(cp.array.samples_in_arr1_are_not_in_arr2(self.levels_inter, self.levels_all)):
+            if any(idp.array.samples_in_arr1_are_not_in_arr2(self.levels_inter, self.levels_all)):
                 raise ValueError('levels_inter')
 
-            if any(cp.array.samples_in_arr1_are_not_in_arr2(
+            if any(idp.array.samples_in_arr1_are_not_in_arr2(
                     self.levels_all, np.append(self.levels_inter, self.levels_intra, axis=0))):
                 raise ValueError('self.levels_intra, levels_inter')
 
-            if any(cp.array.samples_in_arr1_are_in_arr2(self.levels_inter, self.levels_intra)):
+            if any(idp.array.samples_in_arr1_are_in_arr2(self.levels_inter, self.levels_intra)):
                 raise ValueError('self.levels_intra, levels_inter')
 
         self.G = self.n_levels_directories_inter = self.levels_inter.size
@@ -191,7 +191,7 @@ class CSVLoader:
             h += 1
 
         self.K = self.n_classes = self.n_conditions_directories[self.levels_labels]
-        self.n_samples = cp.maths.prod(self.n_conditions_directories_inter)
+        self.n_samples = idp.maths.prod(self.n_conditions_directories_inter)
         # self.n_samples = math.prod(self.n_conditions_directories)
 
         self.rows = rows
@@ -296,14 +296,14 @@ class CSVLoader:
 
         if self.shifts_inter is not None:
             self.combinations_directories_inter_no_shift = (
-                cp.combinations.conditions_to_combinations(self.conditions_directories_inter))
+                idp.combinations.conditions_to_combinations(self.conditions_directories_inter))
             self.combinations_directories_inter = None
             self.labels = None
 
         else:
             self.combinations_directories_inter_no_shift = None
             self.combinations_directories_inter = (
-                cp.combinations.conditions_to_combinations(self.conditions_directories_inter))
+                idp.combinations.conditions_to_combinations(self.conditions_directories_inter))
             if self.return_labels_eb:
                 self.labels = torch.tensor(
                     self.combinations_directories_inter[slice(0, self.n_samples, 1), np.squeeze(self.levels_labels)],
@@ -313,22 +313,22 @@ class CSVLoader:
 
         if self.shifts_intra is not None:
             self.combinations_directories_intra_no_shift = (
-                cp.combinations.conditions_to_combinations(self.conditions_directories_intra))
+                idp.combinations.conditions_to_combinations(self.conditions_directories_intra))
             self.combinations_directories_intra = None
 
         else:
             self.combinations_directories_intra_no_shift = None
             self.combinations_directories_intra = (
-                cp.combinations.conditions_to_combinations(self.conditions_directories_intra))
+                idp.combinations.conditions_to_combinations(self.conditions_directories_intra))
 
         self.combinations_indexes_input_intra = (
-            cp.combinations.n_conditions_to_combinations(self.n_conditions_directories_intra))
+            idp.combinations.n_conditions_to_combinations(self.n_conditions_directories_intra))
 
         combination_directory_str_0 = [self.conditions_directories_names[l][0] for l in range(self.L)]
         directory_0 = os.path.join(self.directory_root, *combination_directory_str_0)
-        self.format_csv = cp.directory.get_extension(directory_0, point=False).lower()
+        self.format_csv = idp.directory.get_extension(directory_0, point=False).lower()
 
-        array_np_0 = cp.txt.csv_file_to_array(directory_0, rows=self.rows, columns=self.columns, dtype='f')
+        array_np_0 = idp.txt.csv_file_to_array(directory_0, rows=self.rows, columns=self.columns, dtype='f')
         tensor_0 = torch.tensor(array_np_0, dtype=torch.float32, device=self.device)
 
         shape_file_0 = list(tensor_0.shape)
@@ -392,11 +392,11 @@ class CSVLoader:
             while self.intra_axes_inputs[h] in non_intra_axes_inputs:
                 self.intra_axes_inputs[h] += 1
 
-        self.sample_axes_input = self.axes_inputs[cp.array.samples_in_arr1_are_not_in_arr2(
+        self.sample_axes_input = self.axes_inputs[idp.array.samples_in_arr1_are_not_in_arr2(
             self.axes_inputs, self.batch_axis_inputs)]
 
         # self.batch_axes_of_intra = (
-        #     self.batch_axes[cp.array.samples_in_arr1_are_not_in_arr2(self.batch_axes, self.csv_axes_inputs)])
+        #     self.batch_axes[idp.array.samples_in_arr1_are_not_in_arr2(self.batch_axes, self.csv_axes_inputs)])
 
         self.shape_batch = np.empty(self.n_dims_batch, dtype='i')
         self.shape_batch[self.batch_axis_inputs] = self.batch_size
@@ -542,7 +542,7 @@ class CSVLoader:
                         if self.return_inputs_eb:
                             self.indexes_batch[self.intra_axes_inputs] = self.combinations_indexes_input_intra[j, :]
 
-                            array_np_ebij = cp.txt.csv_file_to_array(
+                            array_np_ebij = idp.txt.csv_file_to_array(
                                 absolute_directory_ebij, rows=self.rows, columns=self.columns, dtype='f')
                             tensor_ebij = torch.tensor(array_np_ebij, dtype=torch.float32, device=self.device)
 
@@ -569,7 +569,7 @@ class CSVLoader:
 
                     if self.return_inputs_eb:
 
-                        array_np_ebij = cp.txt.csv_file_to_array(
+                        array_np_ebij = idp.txt.csv_file_to_array(
                             absolute_directory_ebij, rows=self.rows, columns=self.columns, dtype='f')
                         tensor_ebij = torch.tensor(array_np_ebij, dtype=torch.float32, device=self.device)
 

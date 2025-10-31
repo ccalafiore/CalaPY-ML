@@ -10,8 +10,8 @@ import numpy as np
 import torch
 from .homo import FCNN, IndFCNNs, LSTMNNs
 from ..model_tools import ModelMethods
-from .. import single_layers as cp_single_layers
-# from ... import tensors as cp_tensors
+from .. import single_layers as dlm_single_layers
+# from ... import sdf_tensors
 
 __all__ = ['SequentialHeteroLayers']
 
@@ -92,38 +92,38 @@ class SequentialHeteroLayers(ModelMethods):
             if self.params_of_layers[l]['type_name'] == 'fc':
                 layer_l = torch.nn.Linear(**self.params_of_layers[l]['params'], device=device, dtype=dtype)
             elif self.params_of_layers[l]['type_name'] == 'rnn':
-                layer_l = cp_single_layers.RNN(
+                layer_l = dlm_single_layers.RNN(
                     **self.params_of_layers[l]['params'], device=device, dtype=dtype)
                 self.hidden_state_sizes.append(self.params_of_layers[l]['params']['hidden_size'])
                 self.recurrent_layer_indexes.append(l)
                 self.recurrent_layer_types.append(self.params_of_layers[l]['type_name'])
             elif self.params_of_layers[l]['type_name'] == 'lstm':
-                layer_l = cp_single_layers.LSTM(
+                layer_l = dlm_single_layers.LSTM(
                     **self.params_of_layers[l]['params'], device=device, dtype=dtype)
                 self.hidden_state_sizes.append(self.params_of_layers[l]['params']['hidden_size'])
                 self.recurrent_layer_indexes.append(l)
                 self.recurrent_layer_types.append(self.params_of_layers[l]['type_name'])
             elif self.params_of_layers[l]['type_name'] == 'gru':
-                layer_l = cp_single_layers.GRU(
+                layer_l = dlm_single_layers.GRU(
                     **self.params_of_layers[l]['params'], device=device, dtype=dtype)
                 self.hidden_state_sizes.append(self.params_of_layers[l]['params']['hidden_size'])
                 self.recurrent_layer_indexes.append(l)
                 self.recurrent_layer_types.append(self.params_of_layers[l]['type_name'])
             elif self.params_of_layers[l]['type_name'] == 'conv1d':
-                layer_l = cp_single_layers.Conv1d(
+                layer_l = dlm_single_layers.Conv1d(
                     **self.params_of_layers[l]['params'], device=device, dtype=dtype)
             elif self.params_of_layers[l]['type_name'] == 'conv2d':
-                layer_l = cp_single_layers.Conv2d(
+                layer_l = dlm_single_layers.Conv2d(
                     **self.params_of_layers[l]['params'], device=device, dtype=dtype)
             elif self.params_of_layers[l]['type_name'] == 'conv3d':
-                layer_l = cp_single_layers.Conv3d(
+                layer_l = dlm_single_layers.Conv3d(
                     **self.params_of_layers[l]['params'], device=device, dtype=dtype)
             elif self.params_of_layers[l]['type_name'] == 'noise':
-                layer_l = cp_single_layers.Noise(**self.params_of_layers[l]['params'])
+                layer_l = dlm_single_layers.Noise(**self.params_of_layers[l]['params'])
             elif self.params_of_layers[l]['type_name'] == 'addition':
-                layer_l = cp_single_layers.Addition(**self.params_of_layers[l]['params'])
+                layer_l = dlm_single_layers.Addition(**self.params_of_layers[l]['params'])
             elif self.params_of_layers[l]['type_name'] == 'concatenation':
-                layer_l = cp_single_layers.Concatenation(**self.params_of_layers[l]['params'])
+                layer_l = dlm_single_layers.Concatenation(**self.params_of_layers[l]['params'])
             elif self.params_of_layers[l]['type_name'] == 'dropout':
                 layer_l = torch.nn.Dropout(**self.params_of_layers[l]['params'])
             elif self.params_of_layers[l]['type_name'] == 'sigmoid':

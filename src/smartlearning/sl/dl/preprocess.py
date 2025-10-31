@@ -7,11 +7,11 @@
 
 import os
 import torch
-import calapy as cp
+import independent as idp
 
 
 def extract_features(model, loader, directory_dataset_features=None):
-    timer = cp.clock.Timer()
+    timer = idp.clock.Timer()
 
     n_decimals_for_printing = 6
 
@@ -42,14 +42,14 @@ def extract_features(model, loader, directory_dataset_features=None):
         # a = a.cpu().numpy()
 
         # 1. produce the directory_features
-        relative_directories_features_eb = cp.directory.replace_extensions(relative_directories_eb, 'csv')
-        absolute_directories_features_eb = cp.directory.conditions_to_directories(
+        relative_directories_features_eb = idp.directory.replace_extensions(relative_directories_eb, 'csv')
+        absolute_directories_features_eb = idp.directory.conditions_to_directories(
             [[directory_dataset_features], relative_directories_features_eb], order_outputs='v')
 
         # 2. save features (make funtion array_to_csv_files(array, directories, axes='frc'))
         outputs_eb = torch.unsqueeze(outputs_eb, 1).cpu().numpy()
 
-        cp.txt.array_to_csv_files(
+        idp.txt.array_to_csv_files(
             outputs_eb, 1, 2, [absolute_directories_features_eb], headers=None)
 
     time_extraction = timer.get_delta_time()

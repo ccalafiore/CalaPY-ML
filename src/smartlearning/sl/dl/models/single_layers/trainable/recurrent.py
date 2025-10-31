@@ -2,14 +2,14 @@
 
 import numpy as np
 import torch
-import calapy
-from ...model_tools import ModelMethods as CPModelMethods
+import independent
+from ...model_tools import ModelMethods as sdf_ModelMethods
 
 
 __all__ = ['RNN', 'LSTM', 'GRU']
 
 
-class _RNN(CPModelMethods):
+class _RNN(sdf_ModelMethods):
 
     def __init__(self, type_name, axis_time, h_sigma=0.1):
 
@@ -29,10 +29,10 @@ class _RNN(CPModelMethods):
         except NameError:
             self.superclasses_initiated = []
 
-        if CPModelMethods not in self.superclasses_initiated:
-            CPModelMethods.__init__(self=self)
-            if CPModelMethods not in self.superclasses_initiated:
-                self.superclasses_initiated.append(CPModelMethods)
+        if sdf_ModelMethods not in self.superclasses_initiated:
+            sdf_ModelMethods.__init__(self=self)
+            if sdf_ModelMethods not in self.superclasses_initiated:
+                self.superclasses_initiated.append(sdf_ModelMethods)
 
         self.accepted_type_names_with_h = tuple(['rnn', 'gru'])
         self.accepted_type_names_with_hc = tuple(['lstm'])
@@ -154,7 +154,7 @@ class _RNN(CPModelMethods):
                     h_ndim = h.ndim
                 indexes_h_i = np.asarray([slice(0, h_shape[a], 1) for a in range(0, h_ndim, 1)], dtype='O')
 
-                for indexes_i in cp.combinations.n_conditions_to_combinations_on_the_fly(
+                for indexes_i in idp.combinations.n_conditions_to_combinations_on_the_fly(
                         n_conditions=extra_batch_shape, dtype='i'):
 
                     indexes_input_i[slice(0, n_extra_batch_dims, 1)] = indexes_i
@@ -335,7 +335,7 @@ class _RNN(CPModelMethods):
         indexes = np.asarray([slice(0, h.shape[a], 1) for a in range(0, h.ndim, 1)], dtype='O')
 
         hs = np.empty(shape=batch_shape, dtype='O')
-        for comps_i in cp.combinations.n_conditions_to_combinations_on_the_fly(n_conditions=batch_shape, dtype='i'):
+        for comps_i in idp.combinations.n_conditions_to_combinations_on_the_fly(n_conditions=batch_shape, dtype='i'):
 
             if keepdims:
                 ind_i = [slice(comp_i, comp_i + 1, 1) for comp_i in comps_i.tolist()]

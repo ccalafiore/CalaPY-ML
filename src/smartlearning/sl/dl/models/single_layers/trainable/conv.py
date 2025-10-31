@@ -1,14 +1,14 @@
 
 
 import torch
-import calapy as cp
-from ...model_tools import ModelMethods as CPModelMethods
+import independent as idp
+from ...model_tools import ModelMethods as sdf_ModelMethods
 
 
 __all__ = ['Conv1d', 'Conv2d', 'Conv3d']
 
 
-class _ConvNd(CPModelMethods):
+class _ConvNd(sdf_ModelMethods):
 
     def __init__(self, nd):
 
@@ -21,10 +21,10 @@ class _ConvNd(CPModelMethods):
         except NameError:
             self.superclasses_initiated = []
 
-        if CPModelMethods not in self.superclasses_initiated:
-            CPModelMethods.__init__(self=self)
-            if CPModelMethods not in self.superclasses_initiated:
-                self.superclasses_initiated.append(CPModelMethods)
+        if sdf_ModelMethods not in self.superclasses_initiated:
+            sdf_ModelMethods.__init__(self=self)
+            if sdf_ModelMethods not in self.superclasses_initiated:
+                self.superclasses_initiated.append(sdf_ModelMethods)
 
         if isinstance(nd, int):
             if nd < 1:
@@ -70,7 +70,7 @@ class _ConvNd(CPModelMethods):
             is_output_initiated = False
             output = None
 
-            for indexes_i in cp.combinations.n_conditions_to_combinations_on_the_fly(
+            for indexes_i in idp.combinations.n_conditions_to_combinations_on_the_fly(
                     n_conditions=extra_batch_shape, dtype='i'):
 
                 tup_indexes_i = tuple(indexes_i.tolist())

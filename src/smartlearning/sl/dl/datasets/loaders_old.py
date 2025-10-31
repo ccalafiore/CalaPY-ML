@@ -14,9 +14,9 @@ import math
 import os
 import copy
 import typing
-import calapy as cp
-from ..datasets import tools as cp_tools
-from ..devices import define_device as cp_define_device
+import independent as idp
+from ..datasets import tools as dset_tools
+from ..devices import define_device as sdf_define_device
 
 
 __all__ = ['BatchLoader', 'FileLoader']
@@ -32,7 +32,7 @@ class FileLoader:
             transforms: typing.Union[torchvision.transforms.Compose, None] = None,
             device: typing.Union[torch.device, str, None] = None):
 
-        self.format_file = cp_tools.define_file_format(format_file=format_file, directory_file=directory_file)
+        self.format_file = dset_tools.define_file_format(format_file=format_file, directory_file=directory_file)
 
         if self.format_file in ['png']:
             self.load_type = 'image'
@@ -45,7 +45,7 @@ class FileLoader:
 
             self.load_file = self.load_image
 
-            self.transforms = cp_tools.define_transforms(transforms=transforms)
+            self.transforms = dset_tools.define_transforms(transforms=transforms)
 
         elif self.load_type == 'csv':
             self.load_file = self.load_csv
@@ -57,7 +57,7 @@ class FileLoader:
         else:
             self.load = self.load_with_indexes
 
-        self.device = cp_define_device(device=device)
+        self.device = sdf_define_device(device=device)
 
     def load_with_indexes(self, directory_file: str):
 
@@ -79,7 +79,7 @@ class FileLoader:
 
     def load_csv(self, directory_file: str):
         # todo: define rows and columns
-        data_np = cp.txt.csv_file_to_array(directory_file, rows=None, columns=None, dtype='f')
+        data_np = idp.txt.csv_file_to_array(directory_file, rows=None, columns=None, dtype='f')
 
         data_pt = torch.tensor(data_np, dtype=torch.float32, device=self.device)
 
@@ -241,7 +241,7 @@ class BatchLoader:
             else:
                 non_levels_inter = self.levels_intra
             self.levels_inter = (
-                self.levels_all[cp.array.samples_in_arr1_are_not_in_arr2(self.levels_all, non_levels_inter)])
+                self.levels_all[idp.array.samples_in_arr1_are_not_in_arr2(self.levels_all, non_levels_inter)])
         elif isinstance(levels_inter, (list, tuple)):
             self.levels_inter = np.asarray(levels_inter, dtype='i')
         elif isinstance(levels_inter, np.ndarray):
@@ -260,23 +260,23 @@ class BatchLoader:
         self.levels_inter[self.levels_inter < 0] += self.L
         self.levels_inter_sort = np.sort(self.levels_inter, axis=0)
 
-        if any(cp.array.samples_in_arr1_are_not_in_arr2(self.levels_inter, self.levels_all)):
+        if any(idp.array.samples_in_arr1_are_not_in_arr2(self.levels_inter, self.levels_all)):
             raise ValueError('levels_inter')
 
-        if any(cp.array.samples_in_arr1_are_not_in_arr2(self.levels_labels, self.levels_inter)):
+        if any(idp.array.samples_in_arr1_are_not_in_arr2(self.levels_labels, self.levels_inter)):
             raise ValueError('levels_labels')
 
-        if any(cp.array.samples_in_arr1_are_not_in_arr2(self.levels_intra, self.levels_all)):
+        if any(idp.array.samples_in_arr1_are_not_in_arr2(self.levels_intra, self.levels_all)):
             raise ValueError('levels_intra')
 
-        if any(cp.array.samples_in_arr1_are_in_arr2(self.levels_inter, self.levels_intra)):
+        if any(idp.array.samples_in_arr1_are_in_arr2(self.levels_inter, self.levels_intra)):
             raise ValueError('levels_inter, levels_intra')
 
         if self.loop_time:
             levels_all_selected = np.concatenate([self.levels_inter, self.levels_intra, [self.level_time]], axis=0)
         else:
             levels_all_selected = np.concatenate([self.levels_inter, self.levels_intra], axis=0)
-        if any(cp.array.samples_in_arr1_are_not_in_arr2(self.levels_all, levels_all_selected)):
+        if any(idp.array.samples_in_arr1_are_not_in_arr2(self.levels_all, levels_all_selected)):
             raise ValueError('levels_intra, levels_inter, level_time')
 
         if self.loop_time:
@@ -285,7 +285,7 @@ class BatchLoader:
             if any(self.levels_intra == self.level_time):
                 raise ValueError('levels_intra, levels_time')
 
-        if any(cp.array.samples_in_arr1_are_not_in_arr2(self.levels_dynamic, self.levels_inter)):
+        if any(idp.array.samples_in_arr1_are_not_in_arr2(self.levels_dynamic, self.levels_inter)):
             raise ValueError('levels_dynamic, levels_inter')
 
         self.variables_labels_in_combinations_inter = np.empty(self.n_labels, dtype='i')
@@ -382,11 +382,11 @@ class BatchLoader:
             self.times = self.conditions_directories_time = None
             self.includes_axis_time = False
 
-        self.n_samples = cp.maths.prod(self.n_conditions_directories_inter)
+        self.n_samples = idp.maths.prod(self.n_conditions_directories_inter)
         # self.n_samples = math.prod(self.n_conditions_directories)
 
         self.indexes = indexes
-        self.transforms = cp_tools.define_transforms(transforms=transforms)
+        self.transforms = dset_tools.define_transforms(transforms=transforms)
 
         if batch_size is None:
             if n_batches is None:
@@ -420,9 +420,9 @@ class BatchLoader:
         else:
             self.batches_indexes = None
 
-        self.shifts = shifts  # type: cp_tools.Shifts
+        self.shifts = shifts  # type: dset_tools.Shifts
 
-        self.device = cp_define_device(device=device)
+        self.device = sdf_define_device(device=device)
 
         self.order_accepted_values = 'ilcra'
         if order_outputs is None:
@@ -487,7 +487,7 @@ class BatchLoader:
             if len(self.levels_shifts_inter) == 0:
                 self.shifts_inter = None
             else:
-                self.shifts_inter = cp_tools.Shifts(
+                self.shifts_inter = dset_tools.Shifts(
                     self.ranges_shifts_inter, self.levels_shifts_inter, self.n_samples_e)
                 self.levels_shifts_inter = self.shifts_inter.levels
                 self.levels_shifts_inter_sort = self.shifts_inter.levels_sort
@@ -496,7 +496,7 @@ class BatchLoader:
             if len(self.levels_shifts_intra) == 0:
                 self.shifts_intra = None
             else:
-                self.shifts_intra = cp_tools.Shifts(
+                self.shifts_intra = dset_tools.Shifts(
                     self.ranges_shifts_intra, self.levels_shifts_intra, self.n_samples_e)
                 self.levels_shifts_intra = self.shifts_intra.levels
                 self.levels_shifts_intra_sort = self.shifts_intra.levels_sort
@@ -506,7 +506,7 @@ class BatchLoader:
                 if self.level_shifts_time is None:
                     self.shifts_time = None
                 else:
-                    self.shifts_time = cp_tools.Shifts(
+                    self.shifts_time = dset_tools.Shifts(
                         [self.range_shifts_time], [self.level_shifts_time], self.n_samples_e)
                     self.level_shifts_time = self.shifts_time.levels[0].tolist()
                     self.level_shifts_time_sort = self.shifts_time.levels_sort[0].tolist()
@@ -522,14 +522,14 @@ class BatchLoader:
 
         if self.shifts_inter is not None:
             self.combinations_directories_inter_no_shift = (
-                cp.combinations.conditions_to_combinations(self.conditions_directories_inter))
+                idp.combinations.conditions_to_combinations(self.conditions_directories_inter))
             self.combinations_directories_inter = None
             self.labels = None
 
         else:
             self.combinations_directories_inter_no_shift = None
             self.combinations_directories_inter = (
-                cp.combinations.conditions_to_combinations(self.conditions_directories_inter))
+                idp.combinations.conditions_to_combinations(self.conditions_directories_inter))
             if self.return_labels_eb:
                 self.labels = torch.tensor(
                     self.combinations_directories_inter[slice(0, self.n_samples, 1), np.squeeze(
@@ -545,18 +545,18 @@ class BatchLoader:
 
         if self.shifts_intra is not None:
             self.combinations_directories_intra_no_shift = (
-                cp.combinations.conditions_to_combinations(self.conditions_directories_intra))
+                idp.combinations.conditions_to_combinations(self.conditions_directories_intra))
             self.combinations_directories_intra = None
 
         else:
             self.combinations_directories_intra_no_shift = None
             self.combinations_directories_intra = (
-                cp.combinations.conditions_to_combinations(self.conditions_directories_intra))
+                idp.combinations.conditions_to_combinations(self.conditions_directories_intra))
 
         self.combination_intra_ebij = None
 
         self.combinations_indexes_input_intra = (
-            cp.combinations.n_conditions_to_combinations(self.n_conditions_directories_intra))
+            idp.combinations.n_conditions_to_combinations(self.n_conditions_directories_intra))
 
         self.times_no_shift = None
         if self.shifts_time is not None:
@@ -567,12 +567,12 @@ class BatchLoader:
         combination_directory_str_0 = [self.conditions_directories_names[l][0] for l in range(self.L)]
         directory_0 = os.path.join(self.directory_root, *combination_directory_str_0)
 
-        self.format_file = cp.directory.get_extension(directory_0, point=False).lower()
+        self.format_file = idp.directory.get_extension(directory_0, point=False).lower()
         self.file_loader = FileLoader(
             format_file=self.format_file, directory_file=directory_0,
             indexes=self.indexes, transforms=self.transforms, device=self.device)
 
-        # array_np_0 = cp.txt.csv_file_to_array(directory_0, rows=self.rows, columns=self.columns, dtype='f')
+        # array_np_0 = idp.txt.csv_file_to_array(directory_0, rows=self.rows, columns=self.columns, dtype='f')
         # tensor_0 = torch.tensor(array_np_0, dtype=torch.float32, device=self.device)
 
         tensor_0 = self.file_loader(directory_0)
@@ -656,7 +656,7 @@ class BatchLoader:
         # if self.includes_axis_time:
         #     non_sample_axes_input += [self.time_axis_inputs]
 
-        self.sample_axes_input = self.axes_inputs[cp.array.samples_in_arr1_are_not_in_arr2(
+        self.sample_axes_input = self.axes_inputs[idp.array.samples_in_arr1_are_not_in_arr2(
             self.axes_inputs, non_sample_axes_input)]
 
         self.shape_batch = np.empty(self.n_dims_batch, dtype='i')
@@ -856,7 +856,7 @@ class BatchLoader:
 
                         self.indexes_batch[self.intra_axes_inputs] = self.combinations_indexes_input_intra[j, :]
 
-                        # array_np_ebij = cp.txt.csv_file_to_array(
+                        # array_np_ebij = idp.txt.csv_file_to_array(
                         #     absolute_directory_ebij, rows=self.rows, columns=self.columns, dtype='f')
                         # tensor_ebij = torch.tensor(array_np_ebij, dtype=torch.float32, device=self.device)
 
@@ -886,7 +886,7 @@ class BatchLoader:
 
                 if self.return_inputs_eb:
 
-                    # array_np_ebij = cp.txt.csv_file_to_array(
+                    # array_np_ebij = idp.txt.csv_file_to_array(
                     #     absolute_directory_ebij, rows=self.rows, columns=self.columns, dtype='f')
                     # tensor_ebij = torch.tensor(array_np_ebij, dtype=torch.float32, device=self.device)
 

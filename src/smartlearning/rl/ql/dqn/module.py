@@ -6,11 +6,11 @@ import math
 import random
 import torch
 import numpy as np
-import calapy as cp
-from ....rl import utilities as cp_rl_utilities
-from .....ml import utilities as cp_ml_utilities
+import independent as idp
+from ....rl import utilities as rl_utilities
+from .....ml import utilities as ml_utilities
 from ....sl.dl.output_methods.general import *
-from ....sl.dl.tensors import unsqueeze as cp_unsqueeze
+from ....sl.dl.tensors import unsqueeze as sdf_unsqueeze
 
 
 __all__ = ['DQNMethods', 'TimedDQNMethods']
@@ -468,7 +468,7 @@ class DQNMethods(OutputMethods):
         :type directory_outputs: str | None
         """
 
-        timer = cp.clock.Timer()
+        timer = idp.clock.Timer()
 
         phases_names = ('training', 'validation')
         n_phases = len(phases_names)
@@ -620,7 +620,7 @@ class DQNMethods(OutputMethods):
         if np.any(ind_bool):
             epsilon[ind_bool] = copy.deepcopy(epsilon_end[ind_bool])
 
-        epochs = cp_ml_utilities.EpochsIterator(U=U, E=E)
+        epochs = ml_utilities.EpochsIterator(U=U, E=E)
         e = 0
         u = 0
 
@@ -668,7 +668,7 @@ class DQNMethods(OutputMethods):
                             if observation_epit[a] is not None:
                                 if is_without_state_batch_axis:
                                     if self.is_recurrent and is_without_state_time_axis:
-                                        observation_epit[a] = cp_unsqueeze(
+                                        observation_epit[a] = sdf_unsqueeze(
                                             data=observation_epit[a], dims=sorted_state_bt_axes, sort=False)
                                     else:
                                         observation_epit[a] = torch.unsqueeze(
@@ -700,7 +700,7 @@ class DQNMethods(OutputMethods):
                     cum_rewards_epi = [0.0 for a in range(0, environment[phase_name_p].n_agents, 1)]  # type: list
                     time_lengths_epi = [0 for a in range(0, environment[phase_name_p].n_agents, 1)]  # type: list
 
-                    obs_iterator = cp_rl_utilities.ObservationsIterator(T=T[phase_name_p])
+                    obs_iterator = rl_utilities.ObservationsIterator(T=T[phase_name_p])
 
                     for t in obs_iterator:
 
@@ -737,7 +737,7 @@ class DQNMethods(OutputMethods):
                                 if next_observation_epit[a] is not None:
                                     if is_without_state_batch_axis:
                                         if self.is_recurrent and is_without_state_time_axis:
-                                            next_observation_epit[a] = cp_unsqueeze(
+                                            next_observation_epit[a] = sdf_unsqueeze(
                                                 data=next_observation_epit[a], dims=sorted_state_bt_axes, sort=False)
                                         else:
                                             next_observation_epit[a] = torch.unsqueeze(
@@ -932,7 +932,7 @@ class DQNMethods(OutputMethods):
 
                     if score_per_episode_ep >= highest_score_per_episode:
                         highest_score_per_episode = score_per_episode_ep
-                        highest_score_per_episode_str = cp.strings.format_float_to_str(
+                        highest_score_per_episode_str = idp.strings.format_float_to_str(
                             highest_score_per_episode, n_decimals=n_decimals_for_printing)
 
                         stats['lines'][e][stats['headers']['Is_Highest_Validation_Scores_Per_Episode']] = 1
@@ -949,7 +949,7 @@ class DQNMethods(OutputMethods):
 
                     if cum_reward_per_episode_ep >= highest_cum_reward_per_episode:
                         highest_cum_reward_per_episode = cum_reward_per_episode_ep
-                        highest_cum_reward_per_episode_str = cp.strings.format_float_to_str(
+                        highest_cum_reward_per_episode_str = idp.strings.format_float_to_str(
                             highest_cum_reward_per_episode, n_decimals=n_decimals_for_printing)
 
                         stats['lines'][e][stats['headers']['Is_Highest_Validation_Cumulative_Reward_Per_Episode']] = 1
@@ -966,7 +966,7 @@ class DQNMethods(OutputMethods):
 
                     if reward_per_observation_ep >= highest_reward_per_obs:
                         highest_reward_per_obs = reward_per_observation_ep
-                        highest_reward_per_obs_str = cp.strings.format_float_to_str(
+                        highest_reward_per_obs_str = idp.strings.format_float_to_str(
                             highest_reward_per_obs, n_decimals=n_decimals_for_printing)
 
                         stats['lines'][e][stats['headers']['Is_Highest_Validation_Reward_Per_Observation']] = 1
@@ -984,7 +984,7 @@ class DQNMethods(OutputMethods):
                     if loss_ep <= lowest_loss:
 
                         lowest_loss = loss_ep
-                        lowest_loss_str = cp.strings.format_float_to_str(
+                        lowest_loss_str = idp.strings.format_float_to_str(
                             lowest_loss, n_decimals=n_decimals_for_printing)
 
                         stats['lines'][e][stats['headers']['Is_Lowest_Validation_Loss']] = 1
@@ -1003,23 +1003,23 @@ class DQNMethods(OutputMethods):
 
                     if os.path.isfile(directory_stats):
                         os.remove(directory_stats)
-                    cp.txt.lines_to_csv_file(stats['lines'], directory_stats, stats['headers'])
+                    idp.txt.lines_to_csv_file(stats['lines'], directory_stats, stats['headers'])
                 else:
                     raise ValueError('phase_name_p')
 
-                time_length_per_episode_str_ep = cp.strings.format_float_to_str(
+                time_length_per_episode_str_ep = idp.strings.format_float_to_str(
                     time_length_per_episode_ep, n_decimals=n_decimals_for_printing)
 
-                score_per_episode_str_ep = cp.strings.format_float_to_str(
+                score_per_episode_str_ep = idp.strings.format_float_to_str(
                     score_per_episode_ep, n_decimals=n_decimals_for_printing)
 
-                cum_reward_per_episode_str_ep = cp.strings.format_float_to_str(
+                cum_reward_per_episode_str_ep = idp.strings.format_float_to_str(
                     cum_reward_per_episode_ep, n_decimals=n_decimals_for_printing)
 
-                reward_per_observation_str_ep = cp.strings.format_float_to_str(
+                reward_per_observation_str_ep = idp.strings.format_float_to_str(
                     reward_per_observation_ep, n_decimals=n_decimals_for_printing)
 
-                loss_str_ep = cp.strings.format_float_to_str(loss_ep, n_decimals=n_decimals_for_printing)
+                loss_str_ep = idp.strings.format_float_to_str(loss_ep, n_decimals=n_decimals_for_printing)
 
                 print(
                     'Epoch: {e:d}. Phase: {phase:s}. Time Length per Episode: {ep_time:s}. '
@@ -1491,13 +1491,13 @@ class EpisodeMemory(_Memory):
 
             if self.is_without_state_batch_axis:
                 if self.is_without_state_time_axis:
-                    states_f = cp_unsqueeze(data=states, dims=self.sorted_state_bt_axes, sort=False)
+                    states_f = sdf_unsqueeze(data=states, dims=self.sorted_state_bt_axes, sort=False)
 
                     if next_states is None:
                         next_states_f = torch.zeros(
                             size=states_f.shape, device=states_f.device, dtype=states_f.dtype, requires_grad=False)
                     else:
-                        next_states_f = cp_unsqueeze(data=next_states, dims=self.sorted_state_bt_axes, sort=False)
+                        next_states_f = sdf_unsqueeze(data=next_states, dims=self.sorted_state_bt_axes, sort=False)
                 else:
                     states_f = torch.unsqueeze(input=states, dim=self.state_batch_axis)
                     if next_states is None:
@@ -1523,7 +1523,7 @@ class EpisodeMemory(_Memory):
 
             # if self.is_without_action_batch_axis:
             #     if self.is_without_action_time_axis:
-            #         actions_f = cp_unsqueeze(data=actions, dims=self.sorted_action_bt_axes, sort=False)
+            #         actions_f = sdf_unsqueeze(data=actions, dims=self.sorted_action_bt_axes, sort=False)
             #     else:
             #         actions_f = torch.unsqueeze(input=actions, dim=self.action_batch_axis)
             # else:
@@ -1541,7 +1541,7 @@ class EpisodeMemory(_Memory):
 
             if self.is_without_reward_batch_axis:
                 if self.is_without_reward_time_axis:
-                    rewards_f = cp_unsqueeze(data=rewards_f, dims=self.sorted_reward_bt_axes, sort=False)
+                    rewards_f = sdf_unsqueeze(data=rewards_f, dims=self.sorted_reward_bt_axes, sort=False)
                 else:
                     rewards_f = torch.unsqueeze(input=rewards_f, dim=self.reward_batch_axis)
             else:

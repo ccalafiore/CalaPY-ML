@@ -12,7 +12,7 @@ import PIL
 import numpy as np
 import math
 import os
-import calapy as cp
+import independent as idp
 from .tools import Shifts
 
 
@@ -119,12 +119,12 @@ class ImageLoader:
         self.levels_intra_sort = np.sort(self.levels_intra, axis=0)
 
         self.levels_all = np.arange(self.L, dtype='i')
-        if any(cp.array.samples_in_arr1_are_not_in_arr2(self.levels_intra, self.levels_all)):
+        if any(idp.array.samples_in_arr1_are_not_in_arr2(self.levels_intra, self.levels_all)):
             raise ValueError('levels_intra')
 
         if levels_inter is None:
             self.levels_inter = (
-                self.levels_all[cp.array.samples_in_arr1_are_not_in_arr2(self.levels_all, self.levels_intra)])
+                self.levels_all[idp.array.samples_in_arr1_are_not_in_arr2(self.levels_all, self.levels_intra)])
             self.levels_inter_sort = self.levels_inter
         else:
             try:
@@ -139,14 +139,14 @@ class ImageLoader:
             self.levels_inter[self.levels_inter < 0] += self.L
             self.levels_inter_sort = np.sort(self.levels_inter, axis=0)
 
-            if any(cp.array.samples_in_arr1_are_not_in_arr2(self.levels_inter, self.levels_all)):
+            if any(idp.array.samples_in_arr1_are_not_in_arr2(self.levels_inter, self.levels_all)):
                 raise ValueError('levels_inter')
 
-            if any(cp.array.samples_in_arr1_are_not_in_arr2(
+            if any(idp.array.samples_in_arr1_are_not_in_arr2(
                     self.levels_all, np.append(self.levels_inter, self.levels_intra, axis=0))):
                 raise ValueError('self.levels_intra, levels_inter')
 
-            if any(cp.array.samples_in_arr1_are_in_arr2(self.levels_inter, self.levels_intra)):
+            if any(idp.array.samples_in_arr1_are_in_arr2(self.levels_inter, self.levels_intra)):
                 raise ValueError('self.levels_intra, levels_inter')
 
         self.G = self.n_levels_directories_inter = self.levels_inter.size
@@ -194,7 +194,7 @@ class ImageLoader:
             h += 1
 
         self.K = self.n_classes = self.n_conditions_directories[self.levels_labels]
-        self.n_samples = cp.maths.prod(self.n_conditions_directories_inter)
+        self.n_samples = idp.maths.prod(self.n_conditions_directories_inter)
         # self.n_samples = math.prod(self.n_conditions_directories)
 
         if batch_size is None:
@@ -301,14 +301,14 @@ class ImageLoader:
 
         if self.shifts_inter is not None:
             self.combinations_directories_inter_no_shift = (
-                cp.combinations.conditions_to_combinations(self.conditions_directories_inter))
+                idp.combinations.conditions_to_combinations(self.conditions_directories_inter))
             self.combinations_directories_inter = None
             self.labels = None
 
         else:
             self.combinations_directories_inter_no_shift = None
             self.combinations_directories_inter = (
-                cp.combinations.conditions_to_combinations(self.conditions_directories_inter))
+                idp.combinations.conditions_to_combinations(self.conditions_directories_inter))
             if self.return_labels_eb:
                 self.labels = torch.tensor(
                     self.combinations_directories_inter[slice(0, self.n_samples, 1), np.squeeze(self.levels_labels)],
@@ -318,20 +318,20 @@ class ImageLoader:
 
         if self.shifts_intra is not None:
             self.combinations_directories_intra_no_shift = (
-                cp.combinations.conditions_to_combinations(self.conditions_directories_intra))
+                idp.combinations.conditions_to_combinations(self.conditions_directories_intra))
             self.combinations_directories_intra = None
 
         else:
             self.combinations_directories_intra_no_shift = None
             self.combinations_directories_intra = (
-                cp.combinations.conditions_to_combinations(self.conditions_directories_intra))
+                idp.combinations.conditions_to_combinations(self.conditions_directories_intra))
 
         self.combinations_indexes_input_intra = (
-            cp.combinations.n_conditions_to_combinations(self.n_conditions_directories_intra))
+            idp.combinations.n_conditions_to_combinations(self.n_conditions_directories_intra))
 
         combination_directory_str_0 = [self.conditions_directories_names[l][0] for l in range(self.L)]
         directory_0 = os.path.join(self.directory_root, *combination_directory_str_0)
-        self.format_image = cp.directory.get_extension(directory_0, point=False).lower()
+        self.format_image = idp.directory.get_extension(directory_0, point=False).lower()
 
         image_0 = PIL.Image.open(directory_0)
         tensor_0 = self.transforms(image_0)
@@ -398,11 +398,11 @@ class ImageLoader:
             while self.intra_axes_inputs[h] in non_intra_axes_inputs:
                 self.intra_axes_inputs[h] += 1
 
-        self.sample_axes_input = self.axes_inputs[cp.array.samples_in_arr1_are_not_in_arr2(
+        self.sample_axes_input = self.axes_inputs[idp.array.samples_in_arr1_are_not_in_arr2(
             self.axes_inputs, self.batch_axis_inputs)]
 
         # self.batch_axes_of_intra = (
-        #     self.batch_axes[cp.array.samples_in_arr1_are_not_in_arr2(self.batch_axes, self.image_axes_inputs)])
+        #     self.batch_axes[idp.array.samples_in_arr1_are_not_in_arr2(self.batch_axes, self.image_axes_inputs)])
 
         self.shape_batch = np.empty(self.n_dims_batch, dtype='i')
         self.shape_batch[self.batch_axis_inputs] = self.batch_size

@@ -10,7 +10,7 @@ import torchvision
 import typing
 import math
 import numpy as np
-import calapy as cp
+import independent as idp
 
 
 __all__ = ['Shifts', 'define_transforms', 'define_file_format']
@@ -52,10 +52,10 @@ class Shifts:
         self.n_unique = [None] * self.n_levels  # type: list
 
         for v in range(self.n_levels):
-            if isinstance(ranges_raw[v], cp.array.IntRange):
+            if isinstance(ranges_raw[v], idp.array.IntRange):
                 self.ranges[v] = ranges_raw[v]
             else:
-                self.ranges[v] = cp.array.IntRange(ranges_raw[v])
+                self.ranges[v] = idp.array.IntRange(ranges_raw[v])
 
             if self.ranges[v].len < 1:
                 raise ValueError('range_raw')
@@ -150,7 +150,7 @@ def define_transforms(transforms: typing.Union[torchvision.transforms.Compose, N
 
 def define_file_format(format_file: str = None, directory_file: str = None):
 
-    # format_file_out = cp.directory.get_extension(directory_file, point=False).lower()
+    # format_file_out = idp.directory.get_extension(directory_file, point=False).lower()
 
     if format_file is None:
 
@@ -158,7 +158,7 @@ def define_file_format(format_file: str = None, directory_file: str = None):
             raise ValueError('format_file, directory_file')
 
         elif isinstance(directory_file, str):
-            format_file_out = cp.directory.get_extension(directory_file, point=False).lower()
+            format_file_out = idp.directory.get_extension(directory_file, point=False).lower()
         else:
             raise TypeError('directory_file')
 
@@ -171,7 +171,7 @@ def define_file_format(format_file: str = None, directory_file: str = None):
 
             format_file_out = format_file.lower()
 
-            format_file_tmp = cp.directory.get_extension(directory_file, point=False).lower()
+            format_file_tmp = idp.directory.get_extension(directory_file, point=False).lower()
 
             if format_file_out != format_file_tmp:
                 raise ValueError('format_file or directory_file')

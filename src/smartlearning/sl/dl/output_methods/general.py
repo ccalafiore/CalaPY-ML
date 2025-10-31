@@ -1,7 +1,7 @@
 
 
 import torch
-import calapy as cp
+import independent as idp
 import numpy as np
 import typing
 
@@ -218,10 +218,10 @@ class OutputMethods:
         n_axes_not = len(axes_not)
 
         if n_axes_not == 0:
-            n_losses = cp.maths.prod(losses.shape)
+            n_losses = idp.maths.prod(losses.shape)
         else:
             axes_included = [a for a in range(0, losses.ndim, 1) if a not in axes_not]
-            n_losses = cp.maths.prod(np.asarray(losses.shape, dtype='i')[axes_included])
+            n_losses = idp.maths.prod(np.asarray(losses.shape, dtype='i')[axes_included])
 
         return n_losses
 

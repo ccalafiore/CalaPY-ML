@@ -5,9 +5,9 @@ import copy
 import math
 import torch
 import numpy as np
-import calapy as cp
-from ....rl import utilities as cp_rl_utilities
-from .....ml import utilities as cp_ml_utilities
+import independent as idp
+from ....rl import utilities as rl_utilities
+from .....ml import utilities as ml_utilities
 from ....sl.dl.output_methods.general import *
 
 
@@ -432,7 +432,7 @@ class DQNMethods(OutputMethods):
         :type directory_outputs:
         """
 
-        timer = cp.clock.Timer()
+        timer = idp.clock.Timer()
 
         phases_names = ('training', 'validation')
         n_phases = len(phases_names)
@@ -566,7 +566,7 @@ class DQNMethods(OutputMethods):
         if np.any(ind_bool):
             epsilon[ind_bool] = copy.deepcopy(epsilon_end[ind_bool])
 
-        epochs = cp_ml_utilities.EpochsIterator(U=U, E=E)
+        epochs = ml_utilities.EpochsIterator(U=U, E=E)
         e = 0
         u = 0
 
@@ -635,7 +635,7 @@ class DQNMethods(OutputMethods):
                     cum_rewards_epi = [0.0 for a in range(0, environment[phase_name_p].n_agents, 1)]  # type: list
                     time_lengths_epi = [0 for a in range(0, environment[phase_name_p].n_agents, 1)]  # type: list
 
-                    obs_iterator = cp_rl_utilities.ObservationsIterator(T=T[phase_name_p])
+                    obs_iterator = rl_utilities.ObservationsIterator(T=T[phase_name_p])
 
                     for t in obs_iterator:
 
@@ -891,7 +891,7 @@ class DQNMethods(OutputMethods):
 
                     if score_per_episode_ep >= highest_score_per_episode:
                         highest_score_per_episode = score_per_episode_ep
-                        highest_score_per_episode_str = cp.strings.format_float_to_str(
+                        highest_score_per_episode_str = idp.strings.format_float_to_str(
                             highest_score_per_episode, n_decimals=n_decimals_for_printing)
 
                         stats['lines'][e][stats['headers']['Is_Highest_Validation_Scores_Per_Episode']] = 1
@@ -908,7 +908,7 @@ class DQNMethods(OutputMethods):
 
                     if cum_reward_per_episode_ep >= highest_cum_reward_per_episode:
                         highest_cum_reward_per_episode = cum_reward_per_episode_ep
-                        highest_cum_reward_per_episode_str = cp.strings.format_float_to_str(
+                        highest_cum_reward_per_episode_str = idp.strings.format_float_to_str(
                             highest_cum_reward_per_episode, n_decimals=n_decimals_for_printing)
 
                         stats['lines'][e][stats['headers']['Is_Highest_Validation_Cumulative_Reward_Per_Episode']] = 1
@@ -925,7 +925,7 @@ class DQNMethods(OutputMethods):
 
                     if reward_per_observation_ep >= highest_reward_per_obs:
                         highest_reward_per_obs = reward_per_observation_ep
-                        highest_reward_per_obs_str = cp.strings.format_float_to_str(
+                        highest_reward_per_obs_str = idp.strings.format_float_to_str(
                             highest_reward_per_obs, n_decimals=n_decimals_for_printing)
 
                         stats['lines'][e][stats['headers']['Is_Highest_Validation_Reward_Per_Observation']] = 1
@@ -943,7 +943,7 @@ class DQNMethods(OutputMethods):
                     if loss_ep <= lowest_loss:
 
                         lowest_loss = loss_ep
-                        lowest_loss_str = cp.strings.format_float_to_str(
+                        lowest_loss_str = idp.strings.format_float_to_str(
                             lowest_loss, n_decimals=n_decimals_for_printing)
 
                         stats['lines'][e][stats['headers']['Is_Lowest_Validation_Loss']] = 1
@@ -962,23 +962,23 @@ class DQNMethods(OutputMethods):
 
                     if os.path.isfile(directory_stats):
                         os.remove(directory_stats)
-                    cp.txt.lines_to_csv_file(stats['lines'], directory_stats, stats['headers'])
+                    idp.txt.lines_to_csv_file(stats['lines'], directory_stats, stats['headers'])
                 else:
                     raise ValueError('phase_name_p')
 
-                time_length_per_episode_str_ep = cp.strings.format_float_to_str(
+                time_length_per_episode_str_ep = idp.strings.format_float_to_str(
                     time_length_per_episode_ep, n_decimals=n_decimals_for_printing)
 
-                score_per_episode_str_ep = cp.strings.format_float_to_str(
+                score_per_episode_str_ep = idp.strings.format_float_to_str(
                     score_per_episode_ep, n_decimals=n_decimals_for_printing)
 
-                cum_reward_per_episode_str_ep = cp.strings.format_float_to_str(
+                cum_reward_per_episode_str_ep = idp.strings.format_float_to_str(
                     cum_reward_per_episode_ep, n_decimals=n_decimals_for_printing)
 
-                reward_per_observation_str_ep = cp.strings.format_float_to_str(
+                reward_per_observation_str_ep = idp.strings.format_float_to_str(
                     reward_per_observation_ep, n_decimals=n_decimals_for_printing)
 
-                loss_str_ep = cp.strings.format_float_to_str(loss_ep, n_decimals=n_decimals_for_printing)
+                loss_str_ep = idp.strings.format_float_to_str(loss_ep, n_decimals=n_decimals_for_printing)
 
                 print(
                     'Epoch: {e:d}. Phase: {phase:s}. Time Length per Episode: {ep_time:s}. '
